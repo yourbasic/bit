@@ -194,6 +194,49 @@ func TestEmpty(t *testing.T) {
 	}
 }
 
+func TestNext(t *testing.T) {
+	for _, x := range []struct {
+		s     *Set
+		m     int
+		nextN int
+	}{
+		{New(), 0, -1},
+		{New(), -1, -1},
+
+		{New(1), -1, 1},
+		{New(1), 0, 1},
+		{New(1), 1, -1},
+		{New(1), 2, -1},
+
+		{New(0, 2), -1, 0},
+		{New(0, 2), 0, 2},
+		{New(0, 2), 1, 2},
+		{New(0, 2), 2, -1},
+		{New(0, 2), 3, -1},
+
+		{New(63, 64), 62, 63},
+		{New(63, 64), 63, 64},
+		{New(63, 64), 64, -1},
+
+		{New(100, 300), MinInt, 100},
+		{New(100, 300), 0, 100},
+		{New(100, 300), 99, 100},
+		{New(100, 300), 100, 300},
+		{New(100, 300), 200, 300},
+		{New(100, 300), 299, 300},
+		{New(100, 300), 300, -1},
+		{New(100, 300), 400, -1},
+		{New(100, 300), MaxInt, -1},
+	} {
+		s := x.s
+		m := x.m
+		n := s.Next(m)
+		if n != x.nextN {
+			t.Errorf("%v.Next(%d) = %d; want %d", s, m, n, x.nextN)
+		}
+	}
+}
+
 func TestVisit(t *testing.T) {
 	for _, x := range []struct {
 		s   *Set

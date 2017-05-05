@@ -110,6 +110,36 @@ func (s *Set) Empty() bool {
 	return len(s.data) == 0
 }
 
+// Next returns the next element n, n > m, in the set,
+// or -1 if there is no such element.
+func (s *Set) Next(m int) int {
+	d := s.data
+	len := len(d)
+	if len == 0 {
+		return -1
+	}
+	if m < 0 {
+		if d[0]&1 != 0 {
+			return 0
+		}
+		m = 0
+	}
+	i := m >> shift
+	if i >= len {
+		return -1
+	}
+	t := 1 + uint(m&mask)
+	w := d[i] >> t << t // Zero out bits for numbers ≤ m.
+	for i < len-1 && w == 0 {
+		i++
+		w = d[i]
+	}
+	if w == 0 {
+		return -1
+	}
+	return i<<shift + TrailingZeros(w)
+}
+
 // Visit calls the do function for each element of s in numerical order.
 // If do returns true, Visit returns immediately, skipping any remaining
 // elements, and returns true. It is safe for do to add or delete

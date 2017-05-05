@@ -3,7 +3,45 @@ package bit_test
 import (
 	"fmt"
 	"github.com/yourbasic/bit"
+	"math"
 )
+
+// How to create, combine, compare and print bitsets.
+func Example_basics() {
+	// Add all elements in the range [0, 100) to the empty set.
+	A := new(bit.Set).AddRange(0, 100) // {0..99}
+
+	// Create a new set with the elements 0 and 200, and then add [50, 150).
+	B := bit.New(0, 200).AddRange(50, 150) // {0 50..149 200}
+
+	// Compute the symmetric difference X = A △ B, also known as XOR.
+	X := A.AndNot(B).Or(B.AndNot(A)) // (A ∖ B) ∪ (B ∖ A)
+
+	// Compute A △ B in a different way.
+	Y := A.Or(B).AndNot(A.And(B)) // (A ∪ B) ∖ (A ∩ B)
+
+	// Compare the results.
+	if X.Equal(Y) {
+		fmt.Println(X)
+	}
+	// Output: {1..49 100..149 200}
+	//
+}
+
+// Create the set of all primes less than n in O(n log log n) time.
+func Example_eratosthenes() {
+	// Sieve of Eratosthenes
+	const n = 50
+	sieve := bit.New().AddRange(2, n)
+	sqrtN := int(math.Sqrt(n))
+	for p := 2; p <= sqrtN; p = sieve.Next(p) {
+		for k := p * p; k < n; k += p {
+			sieve.Delete(k)
+		}
+	}
+	fmt.Println(sieve)
+	// Output: {2 3 5 7 11 13 17 19 23 29 31 37 41 43 47}
+}
 
 // Compute the sum of all elements in a set.
 func ExampleSet_Visit() {
@@ -31,28 +69,6 @@ func ExampleSet_Visit_abort() {
 		return
 	})
 	// Output: 2 3 5 7
-}
-
-// How to create, combine, compare and print bitsets.
-func Example_basics() {
-	// Add all elements in the range [0, 100) to the empty set.
-	A := new(bit.Set).AddRange(0, 100) // {0..99}
-
-	// Create a new set with the elements 0 and 200, and then add [50, 150).
-	B := bit.New(0, 200).AddRange(50, 150) // {0 50..149 200}
-
-	// Compute the symmetric difference X = A △ B, also known as XOR.
-	X := A.AndNot(B).Or(B.AndNot(A)) // (A ∖ B) ∪ (B ∖ A)
-
-	// Compute A △ B in a different way.
-	Y := A.Or(B).AndNot(A.And(B)) // (A ∪ B) ∖ (A ∩ B)
-
-	// Compare the results.
-	if X.Equal(Y) {
-		fmt.Println(X)
-	}
-	// Output: {1..49 100..149 200}
-	//
 }
 
 func ExampleNew() {
