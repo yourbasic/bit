@@ -1,6 +1,6 @@
 # Your basic bit
 
-Golang bitset implementation with bonus bit-twiddling functions
+Golang bit array implementation with bonus bit-twiddling functions
 
 ![Venn diagram](venn.png)
 

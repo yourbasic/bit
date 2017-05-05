@@ -1,4 +1,19 @@
-// Package bit provides a bitset implementation and some utility bit functions.
+// Package bit provides a bit array implementation and some utility bit functions.
+//
+// Bit functions
+//
+// The functions in this package use bitwise operations instead of
+// looping over individual bits. This gives a considerable speedup,
+// as all bits within a 64-bit word are processed in parallel.
+//
+// Bit array
+//
+// A bit array allows small arrays of bits to be stored and manipulated
+// in the register set without further memory accesses.
+// Because it exploits bit-level parallelism, limits memory access,
+// and efficiently uses the data cache, it often outperforms other
+// data structures on practical data sets.
+//
 package bit
 
 import (
