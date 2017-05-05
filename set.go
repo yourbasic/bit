@@ -11,7 +11,7 @@
 // A bit array allows small arrays of bits to be stored and manipulated
 // in the register set without further memory accesses.
 // Because it exploits bit-level parallelism, limits memory access,
-// and efficiently uses the data cache, it often outperforms other
+// and efficiently uses the data cache, a bit array often outperforms other
 // data structures on practical data sets.
 //
 package bit
