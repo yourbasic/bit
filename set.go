@@ -69,11 +69,30 @@ func (s1 *Set) Equal(s2 *Set) bool {
 		return true
 	}
 	a, b := s1.data, s2.data
-	if len(a) != len(b) {
+	la := len(a)
+	if la != len(b) {
 		return false
 	}
-	for i, l := 0, len(a); i < l; i++ {
+	for i := 0; i < la; i++ {
 		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
+}
+
+// Subset tells if s1 is a subset of s2.
+func (s1 *Set) Subset(s2 *Set) bool {
+	if s1 == s2 {
+		return true
+	}
+	a, b := s1.data, s2.data
+	la := len(a)
+	if la > len(b) {
+		return false
+	}
+	for i := 0; i < la; i++ {
+		if a[i]&^b[i] != 0 {
 			return false
 		}
 	}

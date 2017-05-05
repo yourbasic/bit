@@ -104,25 +104,43 @@ func TestContains(t *testing.T) {
 	}
 }
 
-func TestEqual(t *testing.T) {
-	s1, s2 := New(), New()
-	if !s1.Equal(s1) {
-		t.Errorf("Equal not equal to self.")
-	}
-	if !s1.Equal(s2) {
-		t.Errorf("%v.Equal(%v) false; want true.", s1, s2)
-	}
-	s1 = New().AddRange(1, 100)
-	if s1.Equal(s2) {
-		t.Errorf("%v.Equal(%v) true; want false.", s1, s2)
-	}
-	s2 = New().AddRange(1, 100)
-	if !s1.Equal(s2) {
-		t.Errorf("%v.Equal(%v) false; want true.", s1, s2)
-	}
-	s2 = s2.Delete(65)
-	if s1.Equal(s2) {
-		t.Errorf("%v.Equal(%v) true; want false.", s1, s2)
+func TestCmp(t *testing.T) {
+	Zero, One := New(), New(1)
+	for _, x := range []struct {
+		s1, s2        *Set
+		equal, subset bool
+	}{
+		{Zero, Zero, true, true},
+		{One, One, true, true},
+		{New(), New(), true, true},
+		{New(1), New(1), true, true},
+		{New(64), New(64), true, true},
+		{New(65), New(65), true, true},
+		{New(1, 2, 3), New(1, 2, 3), true, true},
+		{New(100, 200, 300), New(100, 200, 300), true, true},
+
+		{New(), New(1), false, true},
+		{New(1), New(), false, false},
+		{New(1), New(2), false, false},
+		{New(), New(65), false, true},
+		{New(65), New(), false, false},
+		{New(1), New(65), false, false},
+		{New(1, 2, 3), New(100, 200, 300), false, false},
+
+		{New(1), New(1, 2, 3), false, true},
+		{New(1, 2, 3), New(1), false, false},
+		{New(100), New(100, 200, 300), false, true},
+		{New(100, 200, 300), New(100), false, false},
+	} {
+		s1, s2 := x.s1, x.s2
+		equal := s1.Equal(s2)
+		if equal != x.equal {
+			t.Errorf("%v.Equal(%v) = %t; want %t", s1, s2, equal, x.equal)
+		}
+		subset := s1.Subset(s2)
+		if subset != x.subset {
+			t.Errorf("%v.Subset(%v) = %t; want %t", s1, s2, subset, x.subset)
+		}
 	}
 }
 
