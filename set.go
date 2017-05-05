@@ -319,6 +319,12 @@ func (s1 *Set) Or(s2 *Set) *Set {
 	return new(Set).SetOr(s1, s2)
 }
 
+// Xor creates a new set that contains all elements that belong
+// to either s1 or s2, but not to both.
+func (s1 *Set) Xor(s2 *Set) *Set {
+	return new(Set).SetXor(s1, s2)
+}
+
 // AndNot creates a new set that consists of all elements that belong
 // to s1, but not to s2.
 func (s1 *Set) AndNot(s2 *Set) *Set {
@@ -397,6 +403,41 @@ func (s *Set) SetOr(s1, s2 *Set) *Set {
 	copy(d[la:n+1], b[la:n+1])
 	for i := 0; i < la; i++ {
 		d[i] = a[i] | b[i]
+	}
+	return s
+}
+
+// SetXor sets s to the  symmetric difference A ∆ B = (A ∪ B) ∖ (A ∩ B)
+// and then returns a pointer to s.
+func (s *Set) SetXor(s1, s2 *Set) *Set {
+	// Swap, if necessary, to make s1 shorter than s2.
+	if len(s1.data) > len(s2.data) {
+		s1, s2 = s2, s1
+	}
+	a, b := s1.data, s2.data
+	la, lb := len(a), len(b)
+	n := lb - 1
+	if la == lb { // The only case where result may be shorter than len(b).
+		for n >= 0 && a[n]^b[n] == 0 {
+			n--
+		}
+		if n == -1 { // No elements left.
+			s.realloc(0)
+			return s
+		}
+	}
+	if s == s1 || s == s2 {
+		s.resize(n + 1)
+	} else {
+		s.realloc(n + 1)
+	}
+	d := s.data
+	if la <= n {
+		copy(d[la:n+1], b[la:n+1])
+		n = la - 1
+	}
+	for i := 0; i <= n; i++ {
+		d[i] = a[i] ^ b[i]
 	}
 	return s
 }

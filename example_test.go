@@ -6,7 +6,7 @@ import (
 	"math"
 )
 
-// How to create, combine, compare and print bitsets.
+// Create, combine, compare and print bitsets.
 func Example_basics() {
 	// Add all elements in the range [0, 100) to the empty set.
 	A := new(bit.Set).AddRange(0, 100) // {0..99}
@@ -14,18 +14,17 @@ func Example_basics() {
 	// Create a new set with the elements 0 and 200, and then add [50, 150).
 	B := bit.New(0, 200).AddRange(50, 150) // {0 50..149 200}
 
-	// Compute the symmetric difference X = A △ B, also known as XOR.
-	X := A.AndNot(B).Or(B.AndNot(A)) // (A ∖ B) ∪ (B ∖ A)
+	// Compute the symmetric difference A △ B.
+	X := A.Xor(B)
 
-	// Compute A △ B in a different way.
-	Y := A.Or(B).AndNot(A.And(B)) // (A ∪ B) ∖ (A ∩ B)
+	// Compute A △ B as (A ∖ B) ∪ (B ∖ A).
+	Y := A.AndNot(B).Or(B.AndNot(A))
 
 	// Compare the results.
 	if X.Equal(Y) {
 		fmt.Println(X)
 	}
 	// Output: {1..49 100..149 200}
-	//
 }
 
 // Create the set of all primes less than n in O(n log log n) time.

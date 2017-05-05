@@ -469,6 +469,7 @@ func TestBinOp(t *testing.T) {
 	And := binOp{(*Set).SetAnd, "SetAnd"}
 	AndNot := binOp{(*Set).SetAndNot, "SetAndNot"}
 	Or := binOp{(*Set).SetOr, "SetOr"}
+	Xor := binOp{(*Set).SetXor, "SetXor"}
 	for _, x := range []struct {
 		op   binOp
 		a, b *Set
@@ -515,6 +516,20 @@ func TestBinOp(t *testing.T) {
 		{Or, New(100), New(100, 200), New(100, 200)},
 		{Or, New(200), New(100, 200), New(100, 200)},
 		{Or, New(100, 200), New(200, 300), New(100, 200, 300)},
+
+		{Xor, New(), New(), New()},
+		{Xor, New(), New(1), New(1)},
+		{Xor, New(1), New(), New(1)},
+		{Xor, New(1), New(1), New()},
+		{Xor, New(1), New(2), New(1, 2)},
+		{Xor, New(1), New(1, 2), New(2)},
+		{Xor, New(1, 2), New(2, 3), New(1, 3)},
+		{Xor, New(100), New(), New(100)},
+		{Xor, New(), New(100), New(100)},
+		{Xor, New(100), New(100), New()},
+		{Xor, New(100), New(100, 200), New(200)},
+		{Xor, New(200), New(100, 200), New(100)},
+		{Xor, New(100, 200), New(200, 300), New(100, 300)},
 	} {
 		op, name := x.op.f, x.op.name
 		a, b := New().Set(x.a), New().Set(x.b)

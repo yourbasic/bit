@@ -22,7 +22,7 @@ func Union(s ...*bit.Set) *bit.Set {
 	return res
 }
 
-// How to efficiently implement a variadic Union function with SetOr.
+// Implement a variadic Union function using SetOr.
 func Example_union() {
 	a, b, c := bit.New(1, 2), bit.New(2, 3), bit.New(5)
 	fmt.Println(Union(a, b, c))
