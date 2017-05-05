@@ -1,4 +1,19 @@
-// Package bit provides a bitset implementation and some utility bit functions.
+// Package bit provides a bit array implementation and some utility bit functions.
+//
+// Bit functions
+//
+// The functions in this package use bitwise operations instead of
+// looping over individual bits. This gives a considerable speedup,
+// as all bits within a 64-bit word are processed in parallel.
+//
+// Bit array
+//
+// A bit array allows small arrays of bits to be stored and manipulated
+// in the register set without further memory accesses.
+// Because it exploits bit-level parallelism, limits memory access,
+// and efficiently uses the data cache, a bit array often outperforms other
+// data structures on practical data sets.
+//
 package bit
 
 import (
@@ -69,11 +84,30 @@ func (s1 *Set) Equal(s2 *Set) bool {
 		return true
 	}
 	a, b := s1.data, s2.data
-	if len(a) != len(b) {
+	la := len(a)
+	if la != len(b) {
 		return false
 	}
-	for i, l := 0, len(a); i < l; i++ {
+	for i := 0; i < la; i++ {
 		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
+}
+
+// Subset tells if s1 is a subset of s2.
+func (s1 *Set) Subset(s2 *Set) bool {
+	if s1 == s2 {
+		return true
+	}
+	a, b := s1.data, s2.data
+	la := len(a)
+	if la > len(b) {
+		return false
+	}
+	for i := 0; i < la; i++ {
+		if a[i]&^b[i] != 0 {
 			return false
 		}
 	}
@@ -108,6 +142,36 @@ func (s *Set) Size() int {
 // Empty tells if this set is empty.
 func (s *Set) Empty() bool {
 	return len(s.data) == 0
+}
+
+// Next returns the next element n, n > m, in the set,
+// or -1 if there is no such element.
+func (s *Set) Next(m int) int {
+	d := s.data
+	len := len(d)
+	if len == 0 {
+		return -1
+	}
+	if m < 0 {
+		if d[0]&1 != 0 {
+			return 0
+		}
+		m = 0
+	}
+	i := m >> shift
+	if i >= len {
+		return -1
+	}
+	t := 1 + uint(m&mask)
+	w := d[i] >> t << t // Zero out bits for numbers ≤ m.
+	for i < len-1 && w == 0 {
+		i++
+		w = d[i]
+	}
+	if w == 0 {
+		return -1
+	}
+	return i<<shift + TrailingZeros(w)
 }
 
 // Visit calls the do function for each element of s in numerical order.
@@ -289,6 +353,12 @@ func (s1 *Set) Or(s2 *Set) *Set {
 	return new(Set).SetOr(s1, s2)
 }
 
+// Xor creates a new set that contains all elements that belong
+// to either s1 or s2, but not to both.
+func (s1 *Set) Xor(s2 *Set) *Set {
+	return new(Set).SetXor(s1, s2)
+}
+
 // AndNot creates a new set that consists of all elements that belong
 // to s1, but not to s2.
 func (s1 *Set) AndNot(s2 *Set) *Set {
@@ -367,6 +437,41 @@ func (s *Set) SetOr(s1, s2 *Set) *Set {
 	copy(d[la:n+1], b[la:n+1])
 	for i := 0; i < la; i++ {
 		d[i] = a[i] | b[i]
+	}
+	return s
+}
+
+// SetXor sets s to the  symmetric difference A ∆ B = (A ∪ B) ∖ (A ∩ B)
+// and then returns a pointer to s.
+func (s *Set) SetXor(s1, s2 *Set) *Set {
+	// Swap, if necessary, to make s1 shorter than s2.
+	if len(s1.data) > len(s2.data) {
+		s1, s2 = s2, s1
+	}
+	a, b := s1.data, s2.data
+	la, lb := len(a), len(b)
+	n := lb - 1
+	if la == lb { // The only case where result may be shorter than len(b).
+		for n >= 0 && a[n]^b[n] == 0 {
+			n--
+		}
+		if n == -1 { // No elements left.
+			s.realloc(0)
+			return s
+		}
+	}
+	if s == s1 || s == s2 {
+		s.resize(n + 1)
+	} else {
+		s.realloc(n + 1)
+	}
+	d := s.data
+	if la <= n {
+		copy(d[la:n+1], b[la:n+1])
+		n = la - 1
+	}
+	for i := 0; i <= n; i++ {
+		d[i] = a[i] ^ b[i]
 	}
 	return s
 }

@@ -33,6 +33,24 @@ func BenchmarkSize(b *testing.B) {
 	}
 }
 
+func BenchmarkNext(b *testing.B) {
+	b.StopTimer()
+	s := BuildTestSet(b.N)
+	b.StartTimer()
+
+	for n := s.Next(-1); n != -1; {
+		n = s.Next(n)
+	}
+}
+
+func BenchmarkVisit(b *testing.B) {
+	b.StopTimer()
+	s := BuildTestSet(b.N) // As Visit is pretty fast, s can be pretty big.
+	b.StartTimer()
+
+	s.Visit(func(n int) (skip bool) { return })
+}
+
 func BenchmarkSetAnd(b *testing.B) {
 	b.StopTimer()
 	s := New(64*nw - 1).Delete(64*nw - 1) // Allocates nw words.
@@ -43,14 +61,6 @@ func BenchmarkSetAnd(b *testing.B) {
 	for i := 0; i < b.N/nw; i++ { // Measure time per word.
 		s.SetAnd(s1, s2)
 	}
-}
-
-func BenchmarkVisit(b *testing.B) {
-	b.StopTimer()
-	s := BuildTestSet(b.N) // As Visit is pretty fast, s can be pretty big.
-	b.StartTimer()
-
-	s.Visit(func(n int) (skip bool) { return })
 }
 
 func BenchmarkString(b *testing.B) {

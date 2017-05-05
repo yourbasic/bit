@@ -104,25 +104,43 @@ func TestContains(t *testing.T) {
 	}
 }
 
-func TestEqual(t *testing.T) {
-	s1, s2 := New(), New()
-	if !s1.Equal(s1) {
-		t.Errorf("Equal not equal to self.")
-	}
-	if !s1.Equal(s2) {
-		t.Errorf("%v.Equal(%v) false; want true.", s1, s2)
-	}
-	s1 = New().AddRange(1, 100)
-	if s1.Equal(s2) {
-		t.Errorf("%v.Equal(%v) true; want false.", s1, s2)
-	}
-	s2 = New().AddRange(1, 100)
-	if !s1.Equal(s2) {
-		t.Errorf("%v.Equal(%v) false; want true.", s1, s2)
-	}
-	s2 = s2.Delete(65)
-	if s1.Equal(s2) {
-		t.Errorf("%v.Equal(%v) true; want false.", s1, s2)
+func TestCmp(t *testing.T) {
+	Zero, One := New(), New(1)
+	for _, x := range []struct {
+		s1, s2        *Set
+		equal, subset bool
+	}{
+		{Zero, Zero, true, true},
+		{One, One, true, true},
+		{New(), New(), true, true},
+		{New(1), New(1), true, true},
+		{New(64), New(64), true, true},
+		{New(65), New(65), true, true},
+		{New(1, 2, 3), New(1, 2, 3), true, true},
+		{New(100, 200, 300), New(100, 200, 300), true, true},
+
+		{New(), New(1), false, true},
+		{New(1), New(), false, false},
+		{New(1), New(2), false, false},
+		{New(), New(65), false, true},
+		{New(65), New(), false, false},
+		{New(1), New(65), false, false},
+		{New(1, 2, 3), New(100, 200, 300), false, false},
+
+		{New(1), New(1, 2, 3), false, true},
+		{New(1, 2, 3), New(1), false, false},
+		{New(100), New(100, 200, 300), false, true},
+		{New(100, 200, 300), New(100), false, false},
+	} {
+		s1, s2 := x.s1, x.s2
+		equal := s1.Equal(s2)
+		if equal != x.equal {
+			t.Errorf("%v.Equal(%v) = %t; want %t", s1, s2, equal, x.equal)
+		}
+		subset := s1.Subset(s2)
+		if subset != x.subset {
+			t.Errorf("%v.Subset(%v) = %t; want %t", s1, s2, subset, x.subset)
+		}
 	}
 }
 
@@ -190,6 +208,49 @@ func TestEmpty(t *testing.T) {
 		empty := s.Empty()
 		if empty != x.empty {
 			t.Errorf("%v.Empty() = %v; want %v", s, empty, x.empty)
+		}
+	}
+}
+
+func TestNext(t *testing.T) {
+	for _, x := range []struct {
+		s     *Set
+		m     int
+		nextN int
+	}{
+		{New(), 0, -1},
+		{New(), -1, -1},
+
+		{New(1), -1, 1},
+		{New(1), 0, 1},
+		{New(1), 1, -1},
+		{New(1), 2, -1},
+
+		{New(0, 2), -1, 0},
+		{New(0, 2), 0, 2},
+		{New(0, 2), 1, 2},
+		{New(0, 2), 2, -1},
+		{New(0, 2), 3, -1},
+
+		{New(63, 64), 62, 63},
+		{New(63, 64), 63, 64},
+		{New(63, 64), 64, -1},
+
+		{New(100, 300), MinInt, 100},
+		{New(100, 300), 0, 100},
+		{New(100, 300), 99, 100},
+		{New(100, 300), 100, 300},
+		{New(100, 300), 200, 300},
+		{New(100, 300), 299, 300},
+		{New(100, 300), 300, -1},
+		{New(100, 300), 400, -1},
+		{New(100, 300), MaxInt, -1},
+	} {
+		s := x.s
+		m := x.m
+		n := s.Next(m)
+		if n != x.nextN {
+			t.Errorf("%v.Next(%d) = %d; want %d", s, m, n, x.nextN)
 		}
 	}
 }
@@ -426,6 +487,7 @@ func TestBinOp(t *testing.T) {
 	And := binOp{(*Set).SetAnd, "SetAnd"}
 	AndNot := binOp{(*Set).SetAndNot, "SetAndNot"}
 	Or := binOp{(*Set).SetOr, "SetOr"}
+	Xor := binOp{(*Set).SetXor, "SetXor"}
 	for _, x := range []struct {
 		op   binOp
 		a, b *Set
@@ -472,6 +534,20 @@ func TestBinOp(t *testing.T) {
 		{Or, New(100), New(100, 200), New(100, 200)},
 		{Or, New(200), New(100, 200), New(100, 200)},
 		{Or, New(100, 200), New(200, 300), New(100, 200, 300)},
+
+		{Xor, New(), New(), New()},
+		{Xor, New(), New(1), New(1)},
+		{Xor, New(1), New(), New(1)},
+		{Xor, New(1), New(1), New()},
+		{Xor, New(1), New(2), New(1, 2)},
+		{Xor, New(1), New(1, 2), New(2)},
+		{Xor, New(1, 2), New(2, 3), New(1, 3)},
+		{Xor, New(100), New(), New(100)},
+		{Xor, New(), New(100), New(100)},
+		{Xor, New(100), New(100), New()},
+		{Xor, New(100), New(100, 200), New(200)},
+		{Xor, New(200), New(100, 200), New(100)},
+		{Xor, New(100, 200), New(200, 300), New(100, 300)},
 	} {
 		op, name := x.op.f, x.op.name
 		a, b := New().Set(x.a), New().Set(x.b)
