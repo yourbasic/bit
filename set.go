@@ -6,12 +6,12 @@
 // looping over individual bits. This gives a considerable speedup,
 // as all bits within a 64-bit word are processed in parallel.
 //
-// Bit array
+// Bit set
 //
-// A bit array allows small arrays of bits to be stored and manipulated
+// A bit set allows small arrays of bits to be stored and manipulated
 // in the register set without further memory accesses.
 // Because it exploits bit-level parallelism, limits memory access,
-// and efficiently uses the data cache, a bit array often outperforms other
+// and efficiently uses the data cache, a bit set often outperforms other
 // data structures on practical data sets.
 //
 package bit
