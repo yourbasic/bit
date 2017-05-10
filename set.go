@@ -131,7 +131,7 @@ func (s *Set) Max() int {
 func (s *Set) Size() int {
 	d := s.data
 	n := 0
-	for i, l := 0, len(d); i < l; i++ {
+	for i, len := 0, len(d); i < len; i++ {
 		if w := d[i]; w != 0 {
 			n += Count(w)
 		}
@@ -181,7 +181,7 @@ func (s *Set) Next(m int) int {
 // the set in any other way.
 func (s *Set) Visit(do func(n int) (skip bool)) (aborted bool) {
 	d := s.data
-	for i, l := 0, len(d); i < l; i++ {
+	for i, len := 0, len(d); i < len; i++ {
 		w := d[i]
 		if w == 0 {
 			continue

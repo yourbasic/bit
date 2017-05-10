@@ -2,7 +2,7 @@ package bit
 
 const bitsPerWord = 32 << uint(^uint(0)>>63)
 
-// Implementation-specific size of int and uint in bits.
+// BitsPerWord is the implementation-specific size of int and uint in bits.
 const BitsPerWord = bitsPerWord // either 32 or 64
 
 // Implementation-specific integer limit values.
