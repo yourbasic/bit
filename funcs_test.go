@@ -16,7 +16,7 @@ func TestConstants(t *testing.T) {
 			t.Errorf("MaxInt = %#x; want 1<<31 - 1", int64(MaxInt))
 		}
 		if MinInt != -1<<31 {
-			t.Errorf("MaxUint = %#x; want -1 << 31", int64(MinInt))
+			t.Errorf("MinInt = %#x; want -1 << 31", int64(MinInt))
 		}
 	}
 	if bitsPerWord == 64 {
@@ -27,7 +27,7 @@ func TestConstants(t *testing.T) {
 			t.Errorf("MaxInt = %#x; want 1<<63 - 1", int64(MaxInt))
 		}
 		if MinInt != -1<<63 {
-			t.Errorf("MaxUint = %#x; want -1 << 63", int64(MinInt))
+			t.Errorf("MinInt = %#x; want -1 << 63", int64(MinInt))
 		}
 	}
 }

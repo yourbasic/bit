@@ -38,8 +38,18 @@ func BenchmarkNext(b *testing.B) {
 	s := BuildTestSet(b.N)
 	b.StartTimer()
 
-	for n := s.Next(-1); n != -1; {
+	for n := -2; n != -1; {
 		n = s.Next(n)
+	}
+}
+
+func BenchmarkPrev(b *testing.B) {
+	b.StopTimer()
+	s := BuildTestSet(b.N)
+	b.StartTimer()
+
+	for n := MaxInt; n != -1; {
+		n = s.Prev(n)
 	}
 }
 

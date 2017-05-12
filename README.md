@@ -19,7 +19,7 @@ There is an online reference for the package at
 ### Roadmap
 
 * The API of this library is frozen.
-* The version numbers adhere to [semantic versioning][sv].
+* Version numbers adhere to [semantic versioning][sv].
 
 The only accepted reason to modify the API of this package is to
 handle bug fixes that can't be resolved in any other reasonable way.
