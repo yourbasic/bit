@@ -174,6 +174,31 @@ func (s *Set) Next(m int) int {
 	return i<<shift + TrailingZeros(w)
 }
 
+// Prev returns the previous element n, n < m, in the set,
+// or -1 if there is no such element.
+func (s *Set) Prev(m int) int {
+	d := s.data
+	len := len(d)
+	if len == 0 || m <= 0 {
+		return -1
+	}
+	i := len - 1
+	if max := i<<shift + 63 - LeadingZeros(d[i]); m > max {
+		return max
+	}
+	i = m >> shift
+	t := bpw - uint(m&mask)
+	w := d[i] << t >> t // Zero out bits for numbers ≥ m.
+	for i > 0 && w == 0 {
+		i--
+		w = d[i]
+	}
+	if w == 0 {
+		return -1
+	}
+	return i<<shift + 63 - LeadingZeros(w)
+}
+
 // Visit calls the do function for each element of s in numerical order.
 // If do returns true, Visit returns immediately, skipping any remaining
 // elements, and returns true. It is safe for do to add or delete
