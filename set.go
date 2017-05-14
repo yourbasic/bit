@@ -8,9 +8,9 @@
 //
 // Bit set
 //
-// A bit set allows small arrays of bits to be stored and manipulated
-// in the register set without further memory accesses.
-// Because it exploits bit-level parallelism, limits memory access,
+// A bit array, or bit set, is an efficient set data structure.
+// It consists of an array that compactly stores bits.
+// Because it uses bit-level parallelism, limits memory access,
 // and efficiently uses the data cache, a bit set often outperforms other
 // data structures on practical data sets.
 //
