@@ -10,11 +10,11 @@ func Union(s ...*bit.Set) *bit.Set {
 	// Optimization: allocate initital set with adequate capacity.
 	max := -1
 	for _, x := range s {
-		if x.Size() > 0 && x.Max() > max { // Max is undefined for the empty set.
+		if x.Size() > 0 && x.Max() > max { // Max is not defined for the empty set.
 			max = x.Max()
 		}
 	}
-	res := bit.New(max) // A negative number is not included.
+	res := bit.New(max) // A negative number will not be included in the set.
 
 	for _, x := range s {
 		res.SetOr(res, x) // Reuses memory.

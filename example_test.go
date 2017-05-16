@@ -11,7 +11,8 @@ func Example_basics() {
 	// Add all elements in the range [0, 100) to the empty set.
 	A := new(bit.Set).AddRange(0, 100) // {0..99}
 
-	// Create a new set with the elements 0 and 200, and then add [50, 150).
+	// Create a new set containing the two elements 0 and 200,
+	// and then add all elements in the range [50, 150) to the set.
 	B := bit.New(0, 200).AddRange(50, 150) // {0 50..149 200}
 
 	// Compute the symmetric difference A △ B.
@@ -28,7 +29,7 @@ func Example_basics() {
 }
 
 // Create the set of all primes less than n in O(n log log n) time.
-// Try it with n equal to a few hundred millions and be pleasantly surprised.
+// Try the code with n equal to a few hundred millions and be pleasantly surprised.
 func Example_eratosthenes() {
 	// Sieve of Eratosthenes
 	const n = 50

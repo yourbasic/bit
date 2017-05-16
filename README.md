@@ -1,6 +1,10 @@
 # Your basic bit
 
-Golang bit array implementation with bonus bit-twiddling functions
+### Golang set data structure with bonus bit-twiddling functions
+
+A bit array, or bit set, is an efficient set data structure.
+It consists of an array that compactly stores bits and it uses
+bit-level parallelism to perform operations quickly. 
 
 ![Venn diagram](venn.png)
 
@@ -22,7 +26,7 @@ There is an online reference for the package at
 * Version numbers adhere to [semantic versioning][sv].
 
 The only accepted reason to modify the API of this package is to
-handle bug fixes that can't be resolved in any other reasonable way.
+handle issues that can't be resolved in any other reasonable way.
 
 Stefan Nilsson – [korthaj](https://github.com/korthaj)
 

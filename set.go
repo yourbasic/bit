@@ -1,18 +1,20 @@
-// Package bit provides a bit array implementation and some utility bit functions.
+// Package bit provides a bit array implementation
+// and some utility bit functions.
 //
 // Bit functions
 //
-// The functions in this package use bitwise operations instead of
-// looping over individual bits. This gives a considerable speedup,
-// as all bits within a 64-bit word are processed in parallel.
+// The bit functions count leading and trailing zero bits
+// and the number of non-zero bits in a 64-bit word.
+// The functions use bitwise operations instead of looping
+// over individual bits. This gives a considerable speedup,
+// as all bits within the word are processed in parallel.
 //
 // Bit set
 //
-// A bit set allows small arrays of bits to be stored and manipulated
-// in the register set without further memory accesses.
-// Because it exploits bit-level parallelism, limits memory access,
-// and efficiently uses the data cache, a bit set often outperforms other
-// data structures on practical data sets.
+// A bit array, or bit set, is an efficient set data structure
+// that consists of an array of 64-bit words. Because it uses
+// bit-level parallelism, limits memory access, and efficiently uses
+// the data cache, a bit set often outperforms other data structures.
 //
 package bit
 
@@ -65,7 +67,7 @@ func New(n ...int) *Set {
 	return s
 }
 
-// Contains tells if n is an element of this set.
+// Contains tells if n is an element of the set.
 func (s *Set) Contains(n int) bool {
 	if n < 0 {
 		return false
@@ -114,8 +116,8 @@ func (s1 *Set) Subset(s2 *Set) bool {
 	return true
 }
 
-// Max returns the maximum element of the set.
-// It panics if the set is empty.
+// Max returns the maximum element of the set;
+// it panics if the set is empty.
 func (s *Set) Max() int {
 	if len(s.data) == 0 {
 		panic("max not defined for empty set")
@@ -125,7 +127,7 @@ func (s *Set) Max() int {
 	return i<<shift + 63 - LeadingZeros(d[i])
 }
 
-// Size returns the number of elements in this set.
+// Size returns the number of elements in the set.
 // This method scans the set; to check if a set is empty,
 // consider using the more efficient Empty method.
 func (s *Set) Size() int {
@@ -139,7 +141,7 @@ func (s *Set) Size() int {
 	return n
 }
 
-// Empty tells if this set is empty.
+// Empty tells if the set is empty.
 func (s *Set) Empty() bool {
 	return len(s.data) == 0
 }
@@ -390,7 +392,7 @@ func (s1 *Set) AndNot(s2 *Set) *Set {
 	return new(Set).SetAndNot(s1, s2)
 }
 
-// Set sets s to s1 and then returns a pointer to s.
+// Set sets s to s1 and then returns a pointer to the updated set s.
 func (s *Set) Set(s1 *Set) *Set {
 	s.realloc(len(s1.data))
 	copy(s.data, s1.data)
