@@ -26,7 +26,7 @@ There is an online reference for the package at
 * Version numbers adhere to [semantic versioning][sv].
 
 The only accepted reason to modify the API of this package is to
-handle bug fixes that can't be resolved in any other reasonable way.
+handle issues that can't be resolved in any other reasonable way.
 
 Stefan Nilsson – [korthaj](https://github.com/korthaj)
 
