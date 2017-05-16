@@ -199,6 +199,7 @@ func TestEmpty(t *testing.T) {
 	}{
 		{New(), true},
 		{New(-1), true},
+		{New().AddRange(-10, 0), true},
 		{New(1), false},
 		{New(65), false},
 		{New(1, 2, 3), false},
