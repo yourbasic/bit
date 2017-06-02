@@ -6,7 +6,7 @@ import (
 	"math"
 )
 
-// Create, combine, compare and print bit arrays.
+// Create, combine, compare and print bit sets.
 func Example_basics() {
 	// Add all elements in the range [0, 100) to the empty set.
 	A := new(bit.Set).AddRange(0, 100) // {0..99}
@@ -30,7 +30,7 @@ func Example_basics() {
 
 // Create the set of all primes less than n in O(n log log n) time.
 // Try the code with n equal to a few hundred millions and be pleasantly surprised.
-func Example_eratosthenes() {
+func Example_primes() {
 	// Sieve of Eratosthenes
 	const n = 50
 	sieve := bit.New().AddRange(2, n)

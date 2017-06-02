@@ -11,10 +11,21 @@
 //
 // Bit set
 //
-// A bit array, or bit set, is an efficient set data structure
+// A bit set, or bit array, is an efficient set data structure
 // that consists of an array of 64-bit words. Because it uses
 // bit-level parallelism, limits memory access, and efficiently uses
 // the data cache, a bit set often outperforms other data structures.
+//
+// Tutorial
+//
+// The Basics example shows how to create, combine, compare and
+// print bit sets.
+//
+// Primes contains a short and simple, but still efficient,
+// implementation of a prime number sieve.
+//
+// Union is a more advanced example demonstrating how to build
+// an efficient variadic Union function using the SetOr method.
 //
 package bit
 
