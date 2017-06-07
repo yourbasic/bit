@@ -31,15 +31,12 @@ func Example_basics() {
 // Create the set of all primes less than n in O(n log log n) time.
 // Try the code with n equal to a few hundred millions and be pleasantly surprised.
 func Example_primes() {
-	// Sieve of Eratosthenes (with optimization suggested by tege)
+	// Sieve of Eratosthenes
 	const n = 50
 	sieve := bit.New().AddRange(2, n)
-	for k := 4; k < n; k += 2 {
-		sieve.Delete(k)
-	}
 	sqrtN := int(math.Sqrt(n))
-	for p := 3; p <= sqrtN; p = sieve.Next(p) {
-		for k := p * p; k < n; k += 2 * p {
+	for p := 2; p <= sqrtN; p = sieve.Next(p) {
+		for k := p * p; k < n; k += p {
 			sieve.Delete(k)
 		}
 	}
