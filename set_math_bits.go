@@ -138,7 +138,7 @@ func (s *Set) Max() int {
 	}
 	d := s.data
 	i := len(d) - 1
-	return i<<shift + 63 - bits.LeadingZeros64(d[i])
+	return i<<shift + bits.Len64(d[i]) - 1
 }
 
 // Size returns the number of elements in the set.
@@ -199,7 +199,7 @@ func (s *Set) Prev(m int) int {
 		return -1
 	}
 	i := len - 1
-	if max := i<<shift + 63 - bits.LeadingZeros64(d[i]); m > max {
+	if max := i<<shift + bits.Len64(d[i]) - 1; m > max {
 		return max
 	}
 	i = m >> shift
@@ -212,7 +212,7 @@ func (s *Set) Prev(m int) int {
 	if w == 0 {
 		return -1
 	}
-	return i<<shift + 63 - bits.LeadingZeros64(w)
+	return i<<shift + bits.Len64(w) - 1
 }
 
 // Visit calls the do function for each element of s in numerical order.
@@ -556,7 +556,7 @@ func nextPow2(n int) (p int) {
 	if n <= 0 {
 		return 1
 	}
-	if k := 64 - bits.LeadingZeros64(uint64(n)); k < bitsPerWord-1 {
+	if k := bits.Len64(uint64(n)); k < bitsPerWord-1 {
 		return 1 << uint(k)
 	}
 	return MaxInt
