@@ -1,4 +1,4 @@
-// +build !go1.9
+// +build go1.9
 
 // Package bit provides a bit array implementation
 // and some utility bit functions.
@@ -32,6 +32,7 @@
 package bit
 
 import (
+	"math/bits"
 	"strconv"
 )
 
@@ -137,7 +138,7 @@ func (s *Set) Max() int {
 	}
 	d := s.data
 	i := len(d) - 1
-	return i<<shift + 63 - LeadingZeros(d[i])
+	return i<<shift + 63 - bits.LeadingZeros64(d[i])
 }
 
 // Size returns the number of elements in the set.
@@ -148,7 +149,7 @@ func (s *Set) Size() int {
 	n := 0
 	for i, len := 0, len(d); i < len; i++ {
 		if w := d[i]; w != 0 {
-			n += Count(w)
+			n += bits.OnesCount64(w)
 		}
 	}
 	return n
@@ -186,7 +187,7 @@ func (s *Set) Next(m int) int {
 	if w == 0 {
 		return -1
 	}
-	return i<<shift + TrailingZeros(w)
+	return i<<shift + bits.TrailingZeros64(w)
 }
 
 // Prev returns the previous element n, n < m, in the set,
@@ -198,7 +199,7 @@ func (s *Set) Prev(m int) int {
 		return -1
 	}
 	i := len - 1
-	if max := i<<shift + 63 - LeadingZeros(d[i]); m > max {
+	if max := i<<shift + 63 - bits.LeadingZeros64(d[i]); m > max {
 		return max
 	}
 	i = m >> shift
@@ -211,7 +212,7 @@ func (s *Set) Prev(m int) int {
 	if w == 0 {
 		return -1
 	}
-	return i<<shift + 63 - LeadingZeros(w)
+	return i<<shift + 63 - bits.LeadingZeros64(w)
 }
 
 // Visit calls the do function for each element of s in numerical order.
@@ -228,7 +229,7 @@ func (s *Set) Visit(do func(n int) (skip bool)) (aborted bool) {
 		}
 		n := i << shift // element represented by w&1
 		for w != 0 {
-			b := TrailingZeros(w)
+			b := bits.TrailingZeros64(w)
 			n += b
 			if do(n) {
 				return true
@@ -555,7 +556,7 @@ func nextPow2(n int) (p int) {
 	if n <= 0 {
 		return 1
 	}
-	if k := 64 - LeadingZeros(uint64(n)); k < bitsPerWord-1 {
+	if k := 64 - bits.LeadingZeros64(uint64(n)); k < bitsPerWord-1 {
 		return 1 << uint(k)
 	}
 	return MaxInt
