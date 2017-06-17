@@ -14,6 +14,8 @@ const (
 
 // LeadingZeros returns the number of leading zero bits in w;
 // it returns 64 when w is zero.
+//
+// Deprecated: In Go 1.9 this function is available in package math/bits as LeadingZeros64.
 func LeadingZeros(w uint64) int {
 	// Fill word with ones on the right, e.g. 0x0000f308 -> 0x0000ffff.
 	w |= w >> 1
@@ -27,6 +29,8 @@ func LeadingZeros(w uint64) int {
 
 // TrailingZeros returns the number of trailing zero bits in w;
 // it returns 64 when w is zero.
+//
+// Deprecated: In Go 1.9 this function is available in package math/bits as TrailingZeros64.
 func TrailingZeros(w uint64) int {
 	// “Using de Bruijn Sequences to Index a 1 in a Computer Word”,
 	// Leiserson, Prokop, and Randall, MIT, 1998.
@@ -53,6 +57,8 @@ func init() {
 }
 
 // Count returns the number of nonzero bits in w.
+//
+// Deprecated: In Go 1.9 this function is available in package math/bits as OnesCount64.
 func Count(w uint64) int {
 	// “Software Optimization Guide for AMD64 Processors”, Section 8.6.
 	const maxw = 1<<64 - 1
