@@ -2,24 +2,6 @@ package bit
 
 import "testing"
 
-func BenchmarkLeadingZeros(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		LeadingZeros(0xcafecafecafecafe)
-	}
-}
-
-func BenchmarkTrailingZeros(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		TrailingZeros(0xcafecafecafecafe)
-	}
-}
-
-func BenchmarkCount(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		Count(0xcafecafecafecafe)
-	}
-}
-
 // Number of words in test set.
 const nw = 1 << 10
 
