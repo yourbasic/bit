@@ -2,6 +2,8 @@
 
 ### Golang set data structure with bonus bit-twiddling functions
 
+[![GoDoc](https://godoc.org/github.com/yourbasic/bit?status.svg)][godoc-bit]
+
 A bit array, or bit set, is an efficient set data structure.
 It consists of an array that compactly stores bits and it uses
 bit-level parallelism to perform operations quickly. 
