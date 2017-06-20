@@ -1,4 +1,4 @@
-# Your basic bit
+# Your basic bit [![GoDoc](https://godoc.org/github.com/yourbasic/bit?status.svg)][godoc-bit]
 
 ### Golang set data structure with bonus bit-twiddling functions
 
