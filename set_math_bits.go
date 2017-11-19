@@ -32,8 +32,9 @@
 package bit
 
 import (
+	"bytes"
+	"fmt"
 	"math/bits"
-	"strconv"
 )
 
 const (
@@ -252,43 +253,44 @@ func (s *Set) Visit(do func(n int) (skip bool)) (aborted bool) {
 // are listed in ascending order. Runs of at least three consecutive
 // elements from a to b are given as a..b.
 func (s *Set) String() string {
-	var buf []byte
-	buf = append(buf, '{')
+	buf := new(bytes.Buffer) // TODO: Change to strings.Builder when Go 1.10 available.
+	buf.WriteByte('{')
 	a, b := -1, -2 // Keep track of a range a..b of elements.
+	first := true
 	s.Visit(func(n int) (skip bool) {
 		if n == b+1 {
 			b++ // Increase current range from a..b to a..b+1.
 			return
 		}
-		buf = appendRange(buf, a, b)
+		if first && a <= b {
+			first = false
+		} else if a <= b {
+			buf.WriteByte(' ')
+		}
+		writeRange(buf, a, b)
 		a, b = n, n // Start new range.
 		return
 	})
-	buf = appendRange(buf, a, b)
-	if s.Size() > 0 {
-		buf = buf[:len(buf)-1] // Remove trailing " ".
+	if !first && a <= b {
+		buf.WriteByte(' ')
 	}
-	buf = append(buf, '}')
-	return string(buf)
+	writeRange(buf, a, b)
+	buf.WriteByte('}')
+	return buf.String()
 }
 
-// appendRange appends either "", "a ", "a b " or "a..b, " to buf.
-func appendRange(buf []byte, a, b int) []byte {
+// writeRange appends either "", "a", "a b" or "a..b" to buf.
+func writeRange(buf *bytes.Buffer, a, b int) {
 	switch {
 	case a > b:
-		return buf // Append nothing.
+		return // Append nothing.
 	case a == b:
-		buf = strconv.AppendInt(buf, int64(a), 10)
+		fmt.Fprintf(buf, "%d", a)
 	case a+1 == b:
-		buf = strconv.AppendInt(buf, int64(a), 10)
-		buf = append(buf, ' ')
-		buf = strconv.AppendInt(buf, int64(b), 10)
+		fmt.Fprintf(buf, "%d %d", a, b)
 	default:
-		buf = strconv.AppendInt(buf, int64(a), 10)
-		buf = append(buf, ".."...)
-		buf = strconv.AppendInt(buf, int64(b), 10)
+		fmt.Fprintf(buf, "%d..%d", a, b)
 	}
-	return append(buf, ' ')
 }
 
 // Add adds n to s and returns a pointer to the updated set.
