@@ -1,5 +1,4 @@
-// +build go1.9
-// +build !go1.10
+// +build go1.10
 
 // Package bit provides a bit array implementation
 // and some utility bit functions.
@@ -33,9 +32,9 @@
 package bit
 
 import (
-	"bytes"
 	"fmt"
 	"math/bits"
+	"strings"
 )
 
 const (
@@ -254,7 +253,7 @@ func (s *Set) Visit(do func(n int) (skip bool)) (aborted bool) {
 // are listed in ascending order. Runs of at least three consecutive
 // elements from a to b are given as a..b.
 func (s *Set) String() string {
-	buf := new(bytes.Buffer)
+	buf := new(strings.Builder)
 	buf.WriteByte('{')
 	a, b := -1, -2 // Keep track of a range a..b of elements.
 	first := true
@@ -281,7 +280,7 @@ func (s *Set) String() string {
 }
 
 // writeRange appends either "", "a", "a b" or "a..b" to buf.
-func writeRange(buf *bytes.Buffer, a, b int) {
+func writeRange(buf *strings.Builder, a, b int) {
 	switch {
 	case a > b:
 		return // Append nothing.
