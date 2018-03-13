@@ -1,16 +1,7 @@
 // +build go1.9
 // +build !go1.10
 
-// Package bit provides a bit array implementation
-// and some utility bit functions.
-//
-// Bit functions
-//
-// The bit functions count leading and trailing zero bits
-// and the number of non-zero bits in a 64-bit word.
-// The functions use bitwise operations instead of looping
-// over individual bits. This gives a considerable speedup,
-// as all bits within the word are processed in parallel.
+// Package bit provides a bit array implementation.
 //
 // Bit set
 //
