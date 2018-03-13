@@ -1,10 +1,10 @@
 # Your basic bit [![GoDoc](https://godoc.org/github.com/yourbasic/bit?status.svg)][godoc-bit]
 
-### Set data structure with bonus bit-twiddling functions
+### Set data structure for positive numbers
 
 A bit array, or bit set, is an efficient set data structure.
 It consists of an array that compactly stores bits and it uses
-bit-level parallelism to perform operations quickly. 
+bit-level parallelism to perform operations quickly.
 
 ![Venn diagram](venn.png)
 
