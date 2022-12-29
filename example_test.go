@@ -22,16 +22,16 @@ func Example_basics() {
 	// Compute A △ B as (A ∖ B) ∪ (B ∖ A).
 	Y := A.AndNot(B).Or(B.AndNot(A))
 
-	// Compute A ∩ B
-	Z := A.And(B)
-	fmt.Println(Z)
-
 	// Compare the results.
 	if X.Equal(Y) {
 		fmt.Println(X)
 	}
-	// Output: {0 50..99}
-	// {1..49 100..149 200}
+
+	// Compute A ∩ B
+	Z := A.And(B)
+	fmt.Println(Z)
+	// Output: {1..49 100..149 200}
+	// {0 50..99}
 }
 
 // Create the set of all primes less than n in O(n log log n) time.
