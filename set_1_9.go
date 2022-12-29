@@ -1,16 +1,16 @@
-// +build go1.9
-// +build !go1.10
+//go:build go1.9 && !go1.10
+// +build go1.9,!go1.10
 
 // Package bit provides a bit array implementation.
 //
-// Bit set
+// # Bit set
 //
 // A bit set, or bit array, is an efficient set data structure
 // that consists of an array of 64-bit words. Because it uses
 // bit-level parallelism, limits memory access, and efficiently uses
 // the data cache, a bit set often outperforms other data structures.
 //
-// Tutorial
+// # Tutorial
 //
 // The Basics example shows how to create, combine, compare and
 // print bit sets.
@@ -20,7 +20,6 @@
 //
 // Union is a more advanced example demonstrating how to build
 // an efficient variadic Union function using the SetOr method.
-//
 package bit
 
 import (

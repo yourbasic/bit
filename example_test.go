@@ -2,8 +2,9 @@ package bit_test
 
 import (
 	"fmt"
-	"github.com/yourbasic/bit"
 	"math"
+
+	"github.com/yourbasic/bit"
 )
 
 // Create, combine, compare and print bit sets.
@@ -25,7 +26,12 @@ func Example_basics() {
 	if X.Equal(Y) {
 		fmt.Println(X)
 	}
+
+	// Compute A ∩ B
+	Z := A.And(B)
+	fmt.Println(Z)
 	// Output: {1..49 100..149 200}
+	// {0 50..99}
 }
 
 // Create the set of all primes less than n in O(n log log n) time.
