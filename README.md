@@ -14,7 +14,15 @@ Once you have [installed Go][golang-install], run this command
 to install the `bit` package:
 
     go get github.com/yourbasic/bit
-    
+
+### Testing
+
+    go test -v -coverprofile coverage.out && go tool cover -html coverage.out -o coverage.html
+
+### Benchmarking
+
+    go test -bench . -benchmem -cpu 1
+
 ### Documentation
 
 There is an online reference for the package at
