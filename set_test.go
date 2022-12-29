@@ -299,11 +299,11 @@ func TestVisit(t *testing.T) {
 			t.Errorf("%v.Visit(func(n int) { s.DeleteRange(0, n+1); s += Itoa(n) }) -> s=%q; want %q", s, res, x.res)
 		}
 	}
-	s := New(1, 2)
+	s := New(1, 2, 3)
 	count := 0
 	aborted := s.Visit(func(n int) (skip bool) {
 		count++
-		if n == 1 {
+		if n == 2 {
 			skip = true
 			return
 		}
@@ -312,7 +312,7 @@ func TestVisit(t *testing.T) {
 	if aborted == false {
 		t.Errorf("Visit returned false when aborted.")
 	}
-	if count > 1 {
+	if count > 2 {
 		t.Errorf("Visit didn't abort.")
 	}
 	count = 0
@@ -323,7 +323,7 @@ func TestVisit(t *testing.T) {
 	if aborted == true {
 		t.Errorf("Visit returned true when not aborted.")
 	}
-	if count != 2 {
+	if count != 3 {
 		t.Errorf("Visit aborted.")
 	}
 }
