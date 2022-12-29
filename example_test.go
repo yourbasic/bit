@@ -2,8 +2,9 @@ package bit_test
 
 import (
 	"fmt"
-	"github.com/yourbasic/bit"
 	"math"
+
+	"github.com/yourbasic/bit"
 )
 
 // Create, combine, compare and print bit sets.

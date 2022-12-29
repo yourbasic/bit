@@ -2,6 +2,7 @@ package bit_test
 
 import (
 	"fmt"
+
 	"github.com/yourbasic/bit"
 )
 
